@@ -5,15 +5,23 @@ A full-stack web application that scans project folders (uploaded as ZIP files) 
 ## Features
 
 ### Core Functionality
-- ? ZIP file upload and scanning
-- ? Technology detection (languages, frameworks, tools)
-- ? **Duplicate scan detection** - Prevents re-scanning identical projects
-- ? **Pagination** - Browse through scan history efficiently
-- ? **Filtering** - Filter scans by project name, language, or framework
-- ? **Sorting** - Sort by date or project name
-- ? **Delete scans** - Remove unwanted scan results
-- ? Persistent storage - Data survives server restarts
-- ? Configurable file size limits
+- [x] ZIP file upload and scanning
+- [x] Technology detection (languages, frameworks, tools)
+- [x] **Duplicate scan detection** - Prevents re-scanning identical projects
+- [x] **Pagination** - Browse through scan history efficiently
+- [x] **Filtering** - Filter scans by project name, language, or framework
+- [x] **Sorting** - Sort by date or project name
+- [x] **Delete scans** - Remove unwanted scan results
+- [x] Persistent storage - Data survives server restarts
+- [x] Configurable file size limits
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+- **.NET 8 SDK** - [Download here](https://dotnet.microsoft.com/download/dotnet/8.0)
+- **Node.js 18+** and **npm** - [Download here](https://nodejs.org/)
+- **Modern web browser** (Chrome, Firefox, Edge, Safari)
+- **Git** (optional, for cloning the repository)
 
 ## Architecture
 
@@ -47,110 +55,66 @@ A full-stack web application that scans project folders (uploaded as ZIP files) 
 
 ```
 CopilotCourse/
-??? CodebaseTechnologyScanner.API/     # Backend .NET Web API
-?   ??? Controllers/
-?   ?   ??? ScanController.cs
-?   ??? Services/
-?   ?   ??? IScanService.cs
-?   ?   ??? ScanService.cs
-?   ?   ??? TechnologyDetector.cs
-?   ??? Repositories/
-?   ?   ??? IScanRepository.cs
-?   ?   ??? FileScanRepository.cs
-?   ??? Models/
-?   ?   ??? ScanRequest.cs
-?   ?   ??? ScanResult.cs
-?   ?   ??? TechnologyInfo.cs
-?   ?   ??? ErrorResponse.cs
-?   ?   ??? PaginatedResponse.cs
-?   ?   ??? DeleteResponse.cs
-?   ??? Program.cs
-?   ??? appsettings.json
-?
-??? codebase-scanner-ui/               # Frontend React App
-    ??? src/
-    ?   ??? components/
-    ?   ?   ??? Header.tsx
-    ?   ?   ??? Footer.tsx
-    ?   ?   ??? ScanResultCard.tsx
-    ?   ??? layouts/
-    ?   ?   ??? MainLayout.tsx
-    ?   ??? pages/
-    ?   ?   ??? HomePage.tsx
-    ?   ?   ??? NewScanPage.tsx
-    ?   ?   ??? ScanResultsPage.tsx
-    ?   ?   ??? ScanHistoryPage.tsx
-    ?   ??? services/
-    ?   ?   ??? scanService.ts
-    ?   ??? models/
-    ?   ?   ??? ScanRequest.ts
-    ?   ?   ??? ScanResult.ts
-    ?   ?   ??? TechnologyInfo.ts
-    ?   ?   ??? ErrorResponse.ts
-    ?   ?   ??? PaginatedResponse.ts
-    ?   ?   ??? DeleteResponse.ts
-    ?   ??? App.tsx
-    ?   ??? main.tsx
-    ??? package.json
+├── CodebaseTechnologyScanner.API/     # Backend .NET Web API
+│   ├── Controllers/
+│   │   └── ScanController.cs
+│   ├── Services/
+│   │   ├── IScanService.cs
+│   │   ├── ScanService.cs
+│   │   └── TechnologyDetector.cs
+│   ├── Repositories/
+│   │   ├── IScanRepository.cs
+│   │   └── FileScanRepository.cs
+│   ├── Models/
+│   │   ├── ScanRequest.cs
+│   │   ├── ScanResult.cs
+│   │   ├── TechnologyInfo.cs
+│   │   ├── ErrorResponse.cs
+│   │   ├── PaginatedResponse.cs
+│   │   └── DeleteResponse.cs
+│   ├── Utils/
+│   │   ├── FileSizeHelper.cs
+│   │   └── HashHelper.cs
+│   ├── Program.cs
+│   └── appsettings.json
+│
+└── codebase-scanner-ui/               # Frontend React App
+    ├── src/
+    │   ├── components/
+    │   │   ├── Header.tsx
+    │   │   ├── Footer.tsx
+    │   │   └── ScanResultCard.tsx
+    │   ├── layouts/
+    │   │   └── MainLayout.tsx
+    │   ├── pages/
+    │   │   ├── HomePage.tsx
+    │   │   ├── NewScanPage.tsx
+    │   │   ├── ScanResultsPage.tsx
+    │   │   └── ScanHistoryPage.tsx
+    │   ├── services/
+    │   │   └── scanService.ts
+    │   ├── models/
+    │   │   ├── ScanRequest.ts
+    │   │   ├── ScanResult.ts
+    │   │   ├── TechnologyInfo.ts
+    │   │   ├── ErrorResponse.ts
+    │   │   ├── PaginatedResponse.ts
+    │   │   └── DeleteResponse.ts
+    │   ├── App.tsx
+    │   └── main.tsx
+    └── package.json
 ```
 
 ## Pages
 
 1. **Home Page** (`/`) - Landing page with application overview
 2. **New Scan Page** (`/scan`) - Upload ZIP file and initiate scan
-3. **Scan Results Page** (`/results/:scanId`) - Detailed scan results with delete option
-4. **Scan History Page** (`/history`) - Paginated list with filtering, sorting, and delete
+3. **Scan Results Page** (`/results/:id`) - View detailed scan results
+4. **Scan History Page** (`/history`) - Browse, filter, sort, and manage past scans
 
-## API Endpoints
+## Getting Started
 
-### Upload and Scan
-- **POST** `/api/scan/upload` - Upload ZIP file and perform scan
-  - **Request**: `multipart/form-data` with `file` and optional `projectName`
-  - **Response**: Scan result object
-  - **Error Codes**: 400 (invalid file), 409 (duplicate), 413 (file too large), 500 (processing error)
-
-### Get Scan Result
-- **GET** `/api/scan/{id}` - Get specific scan result
-  - **Response**: Scan result object
-  - **Error Codes**: 404 (not found), 500 (server error)
-
-### Get Scan History
-- **GET** `/api/scan/history` - Get paginated scan results with filtering
-  - **Query Parameters**:
-    - `page` (default: 1)
-    - `pageSize` (default: 20, max: 100)
-    - `sortBy` (timestamp | projectName)
-    - `sortOrder` (asc | desc)
-    - `projectName` (filter)
-    - `language` (filter)
-    - `framework` (filter)
-  - **Response**: Paginated response with results and metadata
-  - **Error Codes**: 400 (invalid parameters), 500 (server error)
-
-### Delete Scan
-- **DELETE** `/api/scan/{id}` - Delete scan result
-  - **Response**: Delete confirmation with deleted ID
-  - **Error Codes**: 404 (not found), 500 (server error)
-
-## Technology Detection Capabilities
-
-### Languages Detected
-C#, JavaScript, TypeScript, Python, Java, C++, C, Go, Rust, Ruby, PHP, Swift, Kotlin, Scala, R, Objective-C, SQL, Shell, PowerShell, Dart, Lua, Perl, Groovy, and more
-
-### Frameworks & Tools Detected
-- **JavaScript/TypeScript**: React, Vue.js, Angular, Next.js, Nuxt.js, Svelte, Express.js, NestJS, Gatsby
-- **.NET**: .NET Framework versions from project files
-- **Package Managers**: npm, Yarn, pnpm, pip, Pipenv, Poetry, Bundler, Cargo, Go Modules, Composer
-- **Build Tools**: Gradle, Maven, Webpack, Vite
-- **Containers**: Docker, Docker Compose
-- **Testing**: Jest, Karma, pytest
-- **Linters/Formatters**: ESLint, Prettier
-- **UI Libraries**: Material-UI, Ant Design, Bootstrap, Tailwind CSS
-- **Other Libraries**: Redux, Axios, Lodash
-
-## Setup and Running
-
-### Backend
+### Backend Setup
 
 1. Navigate to the API directory:
    ```bash
@@ -162,14 +126,25 @@ C#, JavaScript, TypeScript, Python, Java, C++, C, Go, Rust, Ruby, PHP, Swift, Ko
    dotnet restore
    ```
 
-3. Run the API:
+3. (Optional) Update `appsettings.json` to customize settings:
+   ```json
+   {
+     "StorageFilePath": "scan-results.json",
+     "MaxUploadSizeBytes": 52428800
+   }
+   ```
+
+4. Run the API:
    ```bash
    dotnet run
    ```
 
-   The API will start on `http://localhost:5000` (or `https://localhost:5001`)
+   The API will start on:
+   - HTTP: `http://localhost:5000`
+   - HTTPS: `https://localhost:7094`
+   - Swagger UI: `http://localhost:5000/swagger`
 
-### Frontend
+### Frontend Setup
 
 1. Navigate to the UI directory:
    ```bash
@@ -181,7 +156,10 @@ C#, JavaScript, TypeScript, Python, Java, C++, C, Go, Rust, Ruby, PHP, Swift, Ko
    npm install
    ```
 
-3. Update API URL if needed in `src/services/scanService.ts`
+3. (Optional) Update API URL if needed in `src/services/scanService.ts`:
+   ```typescript
+   const API_BASE_URL = 'http://localhost:5000/api';
+   ```
 
 4. Run the development server:
    ```bash
@@ -189,6 +167,46 @@ C#, JavaScript, TypeScript, Python, Java, C++, C, Go, Rust, Ruby, PHP, Swift, Ko
    ```
 
    The app will start on `http://localhost:5173`
+
+## API Endpoints
+
+### Scan Operations
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/scan` | Upload and scan a ZIP file |
+| `GET` | `/api/scan/{id}` | Get a specific scan by ID |
+| `GET` | `/api/scan/history` | Get paginated scan history with filtering and sorting |
+| `DELETE` | `/api/scan/{id}` | Delete a scan by ID |
+
+### Query Parameters (for `/api/scan/history`)
+
+- `page` - Page number (default: 1)
+- `pageSize` - Items per page (default: 20, max: 100)
+- `sortBy` - Sort field: `timestamp` or `projectName` (default: `timestamp`)
+- `sortOrder` - Sort order: `asc` or `desc` (default: `desc`)
+- `projectName` - Filter by project name (partial, case-insensitive)
+- `language` - Filter by detected language
+- `framework` - Filter by detected framework
+
+### Example Requests
+
+**Scan a project:**
+```bash
+curl -X POST http://localhost:5000/api/scan \
+  -F "zipFile=@project.zip" \
+  -F "projectName=My Project"
+```
+
+**Get scan history (filtered and sorted):**
+```bash
+curl "http://localhost:5000/api/scan/history?page=1&pageSize=20&sortBy=timestamp&sortOrder=desc&projectName=react"
+```
+
+**Delete a scan:**
+```bash
+curl -X DELETE http://localhost:5000/api/scan/{scanId}
+```
 
 ## Usage
 
@@ -204,6 +222,7 @@ C#, JavaScript, TypeScript, Python, Java, C++, C, Go, Rust, Ruby, PHP, Swift, Ko
 ### Duplicate Detection
 - If you upload a file that was previously scanned, you'll see a dialog
 - Choose to view the existing scan or cancel
+- Prevents unnecessary re-scanning of identical projects
 
 ### Managing Scan History
 1. Navigate to "History" page
@@ -224,7 +243,7 @@ C#, JavaScript, TypeScript, Python, Java, C++, C, Go, Rust, Ruby, PHP, Swift, Ko
 ```json
 {
   "StorageFilePath": "scan-results.json",
-  "MaxUploadSizeBytes": 52428800  // 50 MB (configurable)
+  "MaxUploadSizeBytes": 52428800  // 50 MB (configurable: 1KB to 1GB)
 }
 ```
 
@@ -237,6 +256,8 @@ const API_BASE_URL = 'http://localhost:5000/api';
 
 Scan results are stored in a JSON file (`scan-results.json`) in the API's root directory. This file persists across server restarts, ensuring scan history is maintained.
 
+**Storage Location:** `CodebaseTechnologyScanner.API/scan-results.json`
+
 ## Error Handling
 
 All API errors follow a standardized format:
@@ -248,74 +269,192 @@ All API errors follow a standardized format:
 }
 ```
 
-**Special Cases:**
-- **409 Duplicate**: Includes `existingScanId` to navigate to existing scan
-- **413 File Too Large**: Includes maximum allowed size in details
+### Special Error Cases
 
-## Notes
-
-- **Maximum file upload size**: Configurable in `appsettings.json` (default: 50MB)
-- **Only ZIP files** are accepted
-- **Duplicate detection**: Uses SHA256 file hash
-- **Version detection**: Relies on configuration files where available
-- **Pagination**: Default page size is 20 (max 100)
+| Status Code | Scenario | Additional Fields |
+|-------------|----------|-------------------|
+| `400` | Bad Request | Standard error format |
+| `404` | Scan Not Found | Standard error format |
+| `409` | Duplicate Scan | `existingScanId` included |
+| `413` | File Too Large | Maximum size in `details` |
+| `500` | Server Error | Error details in `details` |
 
 ## Technology Stack Summary
 
-**Backend:**
-- .NET 8
-- ASP.NET Core Web API
-- System.IO.Compression for ZIP handling
-- System.Text.Json for serialization
-- SHA256 for duplicate detection
+### Backend
+- **.NET 8** - Modern, high-performance framework
+- **ASP.NET Core Web API** - RESTful API framework
+- **System.IO.Compression** - ZIP file handling
+- **System.Text.Json** - JSON serialization
+- **SHA256** - File hash for duplicate detection
+- **Swagger/OpenAPI** - API documentation
 
-**Frontend:**
-- React 19
-- TypeScript
-- Vite
-- Material-UI (MUI)
-- React Router v7
-- Emotion (CSS-in-JS)
+### Frontend
+- **React 19** - Latest React with concurrent features
+- **TypeScript** - Type-safe JavaScript
+- **Vite** - Fast build tool and dev server
+- **Material-UI (MUI)** - Modern React component library
+- **React Router v7** - Client-side routing
+- **Emotion** - CSS-in-JS styling
+- **Axios** - HTTP client (via fetch wrapper)
 
-**Storage:**
-- File-based JSON storage (no external database required)
+### Storage
+- **File-based JSON storage** - No external database required
+- **In-memory caching** - Fast data access
+- **Atomic writes** - Data consistency
 
 ## Advanced Features
 
 ### Duplicate Detection
 - Automatic detection of identical project uploads
-- SHA256 hash comparison
+- SHA256 hash comparison for file integrity
 - Option to view existing scan instead of re-scanning
+- Saves processing time and storage
 
 ### Pagination
 - Efficient browsing of large scan histories
-- Configurable page size
+- Configurable page size (1-100)
 - First/Previous/Next/Last navigation
-- Result count display
+- Total count and current page display
+- URL-based state for bookmarking
 
 ### Filtering
 - Filter by project name (case-insensitive partial match)
 - Filter by detected language
 - Filter by detected framework
 - Combine multiple filters
+- Real-time results update
 
 ### Sorting
 - Sort by timestamp (newest/oldest first)
 - Sort by project name (A-Z or Z-A)
 - Persistent across filter changes
+- Stable sort algorithm
 
 ### Delete Functionality
 - Remove unwanted scans from history
 - Confirmation dialog prevents accidental deletion
 - Automatic data refresh after deletion
+- Cascade delete (removes all associated data)
+
+## Detected Technologies
+
+The scanner can detect:
+
+### Languages
+- C#, JavaScript, TypeScript, Python, Java, Go, Rust, PHP, Ruby, Swift, Kotlin, and more
+
+### Frameworks & Libraries
+- **Frontend**: React, Angular, Vue.js, Svelte, Next.js, Vite
+- **Backend**: ASP.NET Core, Express.js, Django, Flask, Spring Boot
+- **Mobile**: React Native, Flutter, Xamarin
+- **Testing**: Jest, Vitest, xUnit, NUnit, MSTest, Moq
+
+### Build Tools & Package Managers
+- npm, Yarn, NuGet, pip, Maven, Gradle, Cargo, Composer
+
+### Configuration Files
+- package.json, *.csproj, requirements.txt, pom.xml, build.gradle, Cargo.toml
+
+## Troubleshooting
+
+### Backend Issues
+
+**Problem:** API won't start
+- **Solution**: Ensure .NET 8 SDK is installed: `dotnet --version`
+- Check if port 5000/7094 is already in use
+
+**Problem:** File upload fails
+- **Solution**: Check file size is under the configured limit
+- Ensure the file is a valid ZIP archive
+- Check disk space availability
+
+**Problem:** Scan results not persisting
+- **Solution**: Verify write permissions for `scan-results.json`
+- Check storage file path in `appsettings.json`
+
+### Frontend Issues
+
+**Problem:** Can't connect to API
+- **Solution**: Verify API is running on `http://localhost:5000`
+- Check CORS settings in `Program.cs`
+- Verify API URL in `scanService.ts`
+
+**Problem:** Build fails
+- **Solution**: Delete `node_modules` and run `npm install` again
+- Clear Vite cache: `npm run build -- --force`
+
+**Problem:** Page not found (404) on refresh
+- **Solution**: This is expected in dev mode. Use the app's navigation or go to the home page
+
+## Testing
+
+### Backend Testing
+```bash
+cd CodebaseTechnologyScanner.API
+dotnet test
+```
+
+### Frontend Testing
+```bash
+cd codebase-scanner-ui
+npm test
+```
+
+## Building for Production
+
+### Backend
+```bash
+cd CodebaseTechnologyScanner.API
+dotnet publish -c Release -o ./publish
+```
+
+### Frontend
+```bash
+cd codebase-scanner-ui
+npm run build
+```
+
+The production build will be in the `dist/` directory.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature-name`
+5. Submit a pull request
+
+### Coding Standards
+- Follow C# and TypeScript best practices
+- Write unit tests for new features
+- Update documentation as needed
+- Ensure all tests pass before submitting PR
 
 ## Future Enhancements
 
-- Authentication and user management
-- Cloud storage integration
-- More sophisticated version detection
-- Dependency tree visualization
-- Security vulnerability scanning
-- Export reports to PDF/CSV
-- Real-time scanning progress updates
-- Batch upload and scanning
+- [ ] Authentication and user management
+- [ ] Cloud storage integration (Azure Blob, AWS S3)
+- [ ] More sophisticated version detection
+- [ ] Dependency tree visualization
+- [ ] Security vulnerability scanning
+- [ ] Export reports to PDF/CSV
+- [ ] Real-time scanning progress updates
+- [ ] Batch upload and scanning
+- [ ] Docker containerization
+- [ ] CI/CD pipeline integration
+- [ ] Code quality metrics
+- [ ] License detection
+
+## Acknowledgments
+
+- Built with [.NET 8](https://dotnet.microsoft.com/)
+- UI powered by [Material-UI](https://mui.com/)
+- Frontend built with [Vite](https://vitejs.dev/)
+- Icons from [Material Icons](https://fonts.google.com/icons)
+
+---
+
+**Note:** This application is designed for development and educational purposes. 
