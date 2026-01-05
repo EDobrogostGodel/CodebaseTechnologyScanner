@@ -417,37 +417,6 @@ npm run build
 
 The production build will be in the `dist/` directory.
 
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature-name`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin feature/your-feature-name`
-5. Submit a pull request
-
-### Coding Standards
-- Follow C# and TypeScript best practices
-- Write unit tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting PR
-
-## Future Enhancements
-
-- [ ] Authentication and user management
-- [ ] Cloud storage integration (Azure Blob, AWS S3)
-- [ ] More sophisticated version detection
-- [ ] Dependency tree visualization
-- [ ] Security vulnerability scanning
-- [ ] Export reports to PDF/CSV
-- [ ] Real-time scanning progress updates
-- [ ] Batch upload and scanning
-- [ ] Docker containerization
-- [ ] CI/CD pipeline integration
-- [ ] Code quality metrics
-- [ ] License detection
-
 ## Acknowledgments
 
 - Built with [.NET 8](https://dotnet.microsoft.com/)
