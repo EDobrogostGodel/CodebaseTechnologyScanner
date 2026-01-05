@@ -1,0 +1,6 @@
+@CodebaseTechnologyScanner.API_HostAddress = http://localhost:5073
+
+GET {{CodebaseTechnologyScanner.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
